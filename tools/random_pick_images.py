@@ -18,6 +18,13 @@ TEST_IMAGES_NUM: int = 44946
 EVAL_DIR: str = "custom-data/eval"
 
 
+def make_dirs(dir_path: str):
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+    else:
+        logger.warning(f"Directory already exists: {dir_path}")
+
+
 def write_txt(images: list[str], output_dir: str, output_txt_path: str = None):
     if output_txt_path is None:
         for fn in tqdm(images):
@@ -44,6 +51,10 @@ def write_txt(images: list[str], output_dir: str, output_txt_path: str = None):
 
 
 def main():
+    make_dirs(TRAIN_DIR)
+    make_dirs(TEST_DIR)
+    make_dirs(EVAL_DIR)
+
     images: list[str] = [
         f for f in os.listdir(INPUT_DIR) if f.endswith((".png", ".jpg", ".jpeg"))
     ]
