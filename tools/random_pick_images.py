@@ -16,6 +16,7 @@ TEST_TXT: str = "custom-data/test.txt"
 TEST_IMAGES_NUM: int = 44946
 
 EVAL_DIR: str = "custom-data/eval"
+EVAL_TXT: str = "custom-data/test.txt"
 
 
 def make_dirs(dir_path: str):
@@ -25,8 +26,8 @@ def make_dirs(dir_path: str):
         logger.warning(f"Directory already exists: {dir_path}")
 
 
-def write_txt(images: list[str], output_dir: str, output_txt_path: str = None):
-    if output_txt_path is None:
+def write_txt(images: list[str], output_dir: str, output_txt_path: str):
+    with open(output_txt_path, "a") as f:
         for fn in tqdm(images):
             fpath: str = os.path.join(output_dir, fn)
             try:
@@ -36,18 +37,7 @@ def write_txt(images: list[str], output_dir: str, output_txt_path: str = None):
                 shutil.copy2(os.path.join(INPUT_DIR, fn_txt), output_dir)
             except Exception as e:
                 print(e)
-    else:
-        with open(output_txt_path, "a") as f:
-            for fn in tqdm(images):
-                fpath: str = os.path.join(output_dir, fn)
-                try:
-                    shutil.copy2(os.path.join(INPUT_DIR, fn), output_dir)
-
-                    fn_txt = os.path.splitext(fn)[0] + ".txt"
-                    shutil.copy2(os.path.join(INPUT_DIR, fn_txt), output_dir)
-                except Exception as e:
-                    print(e)
-                f.write(fpath + "\n")
+            f.write(fpath + "\n")
 
 
 def main():
@@ -75,7 +65,7 @@ def main():
     logger.info(f"Copy test images and annotations: {INPUT_DIR} -> {TEST_DIR}")
     write_txt(test_images, TEST_DIR, TEST_TXT)
     logger.info(f"Copy eval images and annotations: {INPUT_DIR} -> {EVAL_DIR}")
-    write_txt(eval_images, EVAL_DIR)
+    write_txt(eval_images, EVAL_DIR, EVAL_TXT)
 
 
 if __name__ == "__main__":
