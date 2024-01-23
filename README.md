@@ -1,0 +1,1 @@
+GitHub Gistに移すかも
